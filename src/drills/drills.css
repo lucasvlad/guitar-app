@@ -1,21 +1,14 @@
 /* Drill screens: huge prompt, compact fretboard, big answer controls. */
 .drill {
-  --fret-row: 28px;
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
-}
-
-.drill .fb-hl {
-  width: 26px;
-  height: 26px;
-  font-size: 0.75rem;
 }
 
 .drill-prompt {

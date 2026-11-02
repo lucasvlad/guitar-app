@@ -39,7 +39,7 @@ Source of truth: `docs/SPEC.md`. This file turns spec Section 11 into tasks that
   - The picker never returns `lastKey` when there are 2 or more items.
 - [x] **M1-4 Fretboard + NotePad components** (drills-ui). Files: `src/components/Fretboard.tsx`, `src/components/NotePad.tsx`, `src/components/components.css`. Depends: M1-0; builds against the M1-1 contract.
   Accept:
-  - The fretboard is vertical: nut at the top, string 6 on the left, frets 0–12, with markers at frets 3, 5, 7, 9 and 12.
+  - The fretboard is horizontal like tab: string 1 (high e) on top, string 6 at the bottom, nut on the left, frets 0–12 left to right, string names at the left edge, fret numbers below, with markers at frets 3, 5, 7, 9 and 12. It fits an iPhone in portrait with no horizontal scroll.
   - It renders highlights, dims strings outside the subset, and calls `onTap`.
   - NotePad shows 7 letter buttons in natural mode and 12 in chromatic mode. In `auto` mode each label shows both names (e.g. "C♯ D♭").
   - Tap targets are at least 48px.
@@ -226,6 +226,7 @@ interface FretDrillProps { mode: FretMode; strings: number[]; spelling: Spelling
   **iOS:** sound starts after a tap, works in the installed PWA, and the silent-switch behavior is documented, with an on-screen hint if the app is muted.
 - [ ] **M3-5 Session runner** (drills-ui). Files: `src/screens/SessionRunner.tsx` (replaces `SessionTimer`). Depends: M3-2, M3-4.
   Accept: runs the generated plan with block timer, auto-advance, an always-visible metronome, Pause and Skip block. It ends with a one-tap difficulty rating and a preview of tomorrow's focus.
+  Also accept: Restore an in-progress session after the app is killed/reloaded (user feedback).
 - [ ] **M3-6 Home** (drills-ui). Files: `src/screens/Home.tsx`, `App.tsx`. Depends: M3-2.
   Accept: opening the app shows today's session, one big Start button, the streak and the weekly goal. Nothing has to be set up first.
 - [ ] **M3-7 Settings and .ics export** (planner owns `src/planner/ics.ts`; drills-ui owns `Settings.tsx`). Depends: M3-1.
@@ -306,7 +307,7 @@ interface FretDrillProps { mode: FretMode; strings: number[]; spelling: Spelling
 ## Open decisions / assumptions
 1. **String numbering:** `stringIndex` 0 is string 1 (high E), so string number = index + 1, and skill IDs use string numbers.
 2. **Fret range:** drills use frets 0–12. The neighborhood window is clamped to 0–12.
-3. **Fretboard orientation:** vertical, nut at the top, string 6 on the left, to fit a phone held upright. A left-handed mirror comes in M7.
+3. **Fretboard orientation:** horizontal like tab (string 1/high e on top, nut on the left, frets 0–12 left to right), per user feedback 2026-11-01; it replaces the original vertical layout. A left-handed mirror comes in M7.
 4. **Spelling:** in `auto` mode with no key, chromatic notes are spelled C♯ E♭ F♯ A♭ B♭. With a key, they follow the key's major-scale spelling. Fretboard drills grade by pitch class; theory drills grade the spelled note.
 5. **Key set:** theory drills draw from all 15 major key signatures, including C♯ and C♭.
 6. **"Last three sessions":** the last 3 distinct local calendar days with attempts for the skill, with all attempts in those days pooled. `Attempt` therefore needs no session id.

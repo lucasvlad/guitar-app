@@ -1,8 +1,8 @@
-/* Fretboard: vertical, nut at top, string 6 on the left. */
+/* Fretboard: horizontal like tab. High e on top, nut on the left, frets 0-12 left to right. */
 .fretboard {
   display: grid;
-  grid-template-columns: 24px repeat(6, 1fr);
-  grid-template-rows: repeat(13, var(--fret-row, 42px));
+  grid-template-columns: 14px repeat(13, minmax(0, 1fr));
+  grid-template-rows: repeat(6, 34px) 18px;
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
@@ -10,38 +10,48 @@
   -webkit-user-select: none;
 }
 
-.fb-fretnum {
+.fb-name {
   grid-column: 1;
   display: flex;
   align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #aaa;
+}
+
+.fb-name.fb-dim {
+  opacity: 0.3;
+}
+
+.fb-fretnum {
+  grid-row: 7;
+  display: flex;
+  align-items: flex-end;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #888;
 }
 
+.fb-fretnum-anchor {
+  color: var(--accent, #f2a33a);
+  font-weight: 700;
+}
+
 .fb-anchor {
-  grid-column: 1 / -1;
+  grid-row: 1 / -1;
   background: rgba(242, 163, 58, 0.18);
   border-radius: 6px;
 }
 
-.fb-marker {
-  grid-column: 2 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.fb-marker-double {
-  justify-content: space-evenly;
-}
-
+/* Position markers sit between the strings, centered on the rows they span. */
 .fb-dot {
-  width: 14px;
-  height: 14px;
+  align-self: center;
+  justify-self: center;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #3a3a3a;
+  pointer-events: none;
 }
 
 .fb-cell {
@@ -52,7 +62,7 @@
   margin: 0;
   padding: 0;
   border: none;
-  border-bottom: 2px solid #777;
+  border-right: 1px solid #555; /* the fret wire */
   background: transparent;
   color: inherit;
   opacity: 1;
@@ -62,17 +72,17 @@
 }
 
 .fb-cell.fb-open {
-  border-bottom: 6px solid #ddd; /* the nut */
+  border-right: 5px solid #ddd; /* the nut */
 }
 
 /* The string line. */
 .fb-cell::before {
   content: '';
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(50% - 1px);
-  width: 2px;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
   background: #bbb;
 }
 
@@ -82,13 +92,13 @@
 
 .fb-hl {
   position: relative;
-  width: 34px;
-  height: 34px;
+  width: min(28px, calc(100% - 2px));
+  aspect-ratio: 1;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #121212;
 }

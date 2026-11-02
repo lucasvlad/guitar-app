@@ -63,3 +63,21 @@ test('Skip on the last block shows the summary', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
   expect(screen.getByText('Session done')).toBeTruthy()
 })
+
+test('hiding the page pauses the session; Resume continues from the same time', async () => {
+  await start()
+  act(() => vi.advanceTimersByTime(5 * 1000))
+  Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' })
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' })
+  expect(title()).toBe('Paused')
+  act(() => vi.advanceTimersByTime(60 * 1000))
+  document.dispatchEvent(new Event('visibilitychange'))
+  expect(title()).toBe('Paused')
+  expect(time()).toBe('2:55')
+  fireEvent.click(screen.getAllByRole('button', { name: 'Resume' })[0]!)
+  act(() => vi.advanceTimersByTime(1000))
+  expect(time()).toBe('2:54')
+})

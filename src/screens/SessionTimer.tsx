@@ -22,7 +22,7 @@ interface Tally {
 }
 
 // The clock is wall time: endsAt is a Date.now() timestamp, so backgrounding
-// does not stop it. While paused, endsAt is null and `left` holds the remainder.
+// does not stop it (the session auto-pauses when hidden). While paused, endsAt is null and `left` holds the remainder.
 export function SessionTimer({ mode, strings, spelling, onExit }: SessionTimerProps) {
   const [block, setBlock] = useState(0)
   const [endsAt, setEndsAt] = useState<number | null>(() => Date.now() + BLOCKS[0]!.ms)
@@ -51,6 +51,18 @@ export function SessionTimer({ mode, strings, spelling, onExit }: SessionTimerPr
     const id = window.setInterval(tick, 250)
     return () => clearInterval(id)
   }, [endsAt, block])
+
+  // Auto-pause when the app is backgrounded; the user resumes manually.
+  useEffect(() => {
+    if (endsAt === null) return
+    const onVisibility = () => {
+      if (document.visibilityState !== 'hidden') return
+      setLeft(Math.max(0, endsAt - Date.now()))
+      setEndsAt(null)
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [endsAt])
 
   function togglePause() {
     if (paused) setEndsAt(Date.now() + left)

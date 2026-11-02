@@ -104,6 +104,8 @@ For each milestone:
 - 2026-11-01: `idb` as the IndexedDB wrapper.
 - 2026-11-01: Spaced repetition uses Leitner boxes with intervals of 1, 3, 7, 14, 30 days (spec Section 6 allows Leitner or SM-2).
 - 2026-11-01: Sunday is excluded from streaks and the weekly goal (rest day, no reminder).
-- 2026-11-01: Fretboard is vertical on screen (nut at top, string 6 left), frets 0-12; stringIndex 0 = string 1 (high E).
+- 2026-11-01: Fretboard is vertical on screen (nut at top, string 6 left), frets 0-12; stringIndex 0 = string 1 (high E). (Superseded below.)
 - 2026-11-01: All strings drill (5.1 item 1) always uses all six strings; the string-subset option applies to the other drills.
 - 2026-11-01: Leitner promotion only when a skill is due (prevents double promotion within a session); failures always reset to box 0.
+- 2026-11-01: Fretboard is horizontal like tab (string 1/high e on top, nut left, frets 0–12 left→right), per user feedback. Supersedes the vertical decision; stringIndex 0 = string 1 (high E) is unchanged.
+- 2026-11-01: The session timer auto-pauses when the page is hidden; the user resumes manually. Restoring a session after the app is killed is deferred to M3-5.
