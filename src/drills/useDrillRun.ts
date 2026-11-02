@@ -7,15 +7,30 @@ import { pickWeighted } from '../mastery/picker'
 import { newSkill } from '../mastery/skills'
 import { TARGET_MS } from '../mastery/targets'
 
-export interface FretDrillProps {
-  mode: FretMode
-  strings: number[] // string numbers 1..6
+// Theory drills (no instrument) take only these; spelled-answer drills may ignore spelling.
+export interface TheoryDrillProps {
   spelling: SpellingPref
   paused?: boolean
   onAnswer?: (correct: boolean) => void
+  onItemDone?: () => void // an item's feedback ended; the next item is about to show
+}
+
+export interface FretDrillProps extends TheoryDrillProps {
+  mode: FretMode
+  strings: number[] // string numbers 1..6
 }
 
 const FEEDBACK_MS = 700
+
+// Theory drills keep the correct answer on screen this long after a miss.
+export const THEORY_MISS_MS = 1200
+// Longer, for misses that reveal a whole set (a scale, a list of keys, a progression).
+export const REVEAL_MS = 2000
+
+// Feedback colour class for a graded answer (none while unanswered).
+export function gradeClass(graded: boolean | null): string {
+  return graded === null ? '' : graded ? 'drill-right' : 'drill-wrong'
+}
 
 interface Run {
   attempts: Attempt[]
@@ -91,11 +106,17 @@ async function applyAttempts(drill: DrillType, fresh: Attempt[], saves: Promise<
 
 // The shared prompt -> answer -> ~700 ms feedback -> next prompt loop.
 // `items` should be memoized; a new array starts a fresh pick.
+// missMs: how long feedback stays up after a miss (theory drills show the answer longer).
+// answer(correct, units) records one attempt and ends the item; the logged ms is the
+// item's time divided by `units` (e.g. per chord) so per-unit targets still hold.
+// onItemDone fires when the feedback ends, just before the next item shows.
 export function useDrillLoop<T extends { key: string; skillId: string }>(
   drill: DrillType,
   items: T[],
   paused = false,
   onAnswer?: (correct: boolean) => void,
+  missMs = FEEDBACK_MS,
+  onItemDone?: () => void,
 ) {
   const skillIds = [...new Set(items.map((i) => i.skillId))]
   const { ready, history, record } = useDrillRun(drill, skillIds)
@@ -129,13 +150,16 @@ export function useDrillLoop<T extends { key: string; skillId: string }>(
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [])
 
-  function answer(correct: boolean) {
+  function answer(correct: boolean, units = 1) {
     if (paused || !item || graded !== null) return
-    record(item.skillId, item.key, correct, Math.round(performance.now() - t0.current))
-    setGraded(correct)
+    record(item.skillId, item.key, correct, Math.round((performance.now() - t0.current) / units))
     onAnswer?.(correct)
+    setGraded(correct)
     const key = item.key
-    timer.current = window.setTimeout(() => next(key), FEEDBACK_MS)
+    timer.current = window.setTimeout(() => {
+      onItemDone?.()
+      next(key)
+    }, correct ? FEEDBACK_MS : missMs)
   }
 
   // item is null while loading.

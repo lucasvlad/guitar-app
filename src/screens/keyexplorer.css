@@ -1,0 +1,112 @@
+/* Key Explorer: a scrolling reference screen. */
+.ke-keys {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 6px;
+}
+
+.ke-modes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.ke-btn {
+  min-height: 48px;
+  min-width: 0;
+  padding: 0 4px;
+  border: 2px solid #3a3a3a;
+  border-radius: 10px;
+  background: #1e1e1e;
+  color: #f2f2f2;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.ke-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: #3a2c17;
+}
+
+.ke-title {
+  margin: 8px 0 0;
+  font-size: 1.6rem;
+}
+
+.ke-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ke-fact {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.1rem;
+}
+
+.ke-fact .section-label {
+  margin-top: 0;
+}
+
+.ke-scale {
+  font-size: 1.3rem;
+  font-weight: 700;
+  word-spacing: 0.3em;
+}
+
+/* 4 + 3 per row so long names (C♭maj7, B♯ø7) fit at 390px. */
+.ke-chords {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.ke-chord {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0;
+  border-radius: 8px;
+  background: #1e1e1e;
+}
+
+.ke-numeral {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.ke-chord-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.ke-progs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+}
+
+.ke-prog {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #1e1e1e;
+}
+
+.ke-prog-name {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.ke-prog-numerals {
+  font-size: 1rem;
+  word-spacing: 0.3em;
+}
+
+.ke-prog-chords {
+  font-size: 1.15rem;
+  font-weight: 700;
+  word-spacing: 0.3em;
+}

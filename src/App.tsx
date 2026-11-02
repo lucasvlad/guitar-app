@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { getSettings } from './data/db'
 import type { Settings as SettingsData } from './data/types'
-import { DRILLS, type DrillId } from './drills/drillList'
-import { Practice } from './screens/Practice'
+import { DRILLS } from './drills/drillList'
+import { THEORY_DRILLS } from './drills/theoryDrillList'
+import { KeyExplorer } from './screens/KeyExplorer'
+import { Practice, type PracticeTarget } from './screens/Practice'
 import { SessionTimer } from './screens/SessionTimer'
 import { Settings } from './screens/Settings'
 import { useWakeLock } from './screens/useWakeLock'
 import './screens/screens.css'
 
-type Screen = 'practice' | 'session' | 'settings' | DrillId
+type Screen = 'practice' | PracticeTarget
 
 // Used if settings cannot be loaded, so Start is always reachable.
 const FALLBACK_SETTINGS: SettingsData = { spelling: 'auto', fretMode: 'natural', strings: [1, 2, 3, 4, 5, 6] }
@@ -27,7 +29,8 @@ export default function App() {
   }, [])
 
   const drill = DRILLS.find((d) => d.id === screen)
-  useWakeLock(drill !== undefined)
+  const theory = THEORY_DRILLS.find((d) => d.id === screen)
+  useWakeLock(drill !== undefined || theory !== undefined)
 
   if (!settings) return <main className="app" />
 
@@ -37,14 +40,18 @@ export default function App() {
   if (screen === 'session') return <main className="app"><SessionTimer {...drillProps} onExit={home} /></main>
   if (screen === 'settings') return <main className="app"><Settings settings={settings} onChange={setSettings} onBack={home} /></main>
 
-  if (drill) {
+  if (screen === 'key-explorer') return <main className="app"><KeyExplorer onBack={home} /></main>
+
+  const single = drill ?? theory
+  if (single) {
     return (
       <main className="app">
         <div className="topbar">
-          <span className="topbar-title">{drill.title}</span>
+          <span className="topbar-title">{single.title}</span>
           <button type="button" className="topbar-btn" onClick={home}>Done</button>
         </div>
-        <drill.Component {...drillProps} />
+        {drill && <drill.Component {...drillProps} />}
+        {theory && <theory.Component spelling={settings.spelling} />}
       </main>
     )
   }

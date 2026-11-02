@@ -2,6 +2,7 @@
 import 'fake-indexeddb/auto'
 import { afterEach, expect, test, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { THEORY_DRILLS } from '../drills/theoryDrillList'
 import { SessionTimer } from './SessionTimer'
 
 afterEach(() => {
@@ -28,9 +29,9 @@ function title(): string {
 
 test('advancing 3:00 moves to block 2', async () => {
   await start()
-  expect(title()).toBe('1/4 Note on string')
+  expect(title()).toBe('1/5 Note on string')
   act(() => vi.advanceTimersByTime(3 * 60 * 1000))
-  expect(title()).toBe('2/4 Reverse')
+  expect(title()).toBe('2/5 Reverse')
   expect(time()).toBe('3:00')
 })
 
@@ -47,10 +48,16 @@ test('pausing for 60 s leaves the remaining time unchanged', async () => {
   expect(time()).toBe('2:49')
 })
 
-test('jumping 10+ minutes ahead shows the summary', async () => {
+test('jumping 15+ minutes ahead shows the summary', async () => {
   await start()
   act(() => {
-    vi.setSystemTime(Date.now() + 11 * 60 * 1000)
+    vi.setSystemTime(Date.now() + 14 * 60 * 1000)
+    vi.advanceTimersByTime(250)
+  })
+  expect(title()).toBe('5/5 Theory mix')
+  expect(time()).toBe('1:00')
+  act(() => {
+    vi.setSystemTime(Date.now() + 2 * 60 * 1000)
     vi.advanceTimersByTime(250)
   })
   expect(screen.getByText('Session done')).toBeTruthy()
@@ -59,7 +66,10 @@ test('jumping 10+ minutes ahead shows the summary', async () => {
 test('Skip on the last block shows the summary', async () => {
   await start()
   for (let i = 0; i < 3; i++) fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
-  expect(title()).toBe('4/4 All strings')
+  expect(title()).toBe('4/5 All strings')
+  fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
+  expect(title()).toBe('5/5 Theory mix')
+  expect(time()).toBe('5:00')
   fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
   expect(screen.getByText('Session done')).toBeTruthy()
 })
@@ -80,4 +90,12 @@ test('hiding the page pauses the session; Resume continues from the same time', 
   fireEvent.click(screen.getAllByRole('button', { name: 'Resume' })[0]!)
   act(() => vi.advanceTimersByTime(1000))
   expect(time()).toBe('2:54')
+})
+
+test('the Theory mix block renders a theory drill', async () => {
+  await start()
+  for (let i = 0; i < 4; i++) fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
+  const label = document.querySelector('.mix-label')!.textContent
+  expect(THEORY_DRILLS.map((d) => d.title)).toContain(label)
+  await waitFor(() => expect(document.querySelector('.drill-prompt, .drill-title')).toBeTruthy())
 })

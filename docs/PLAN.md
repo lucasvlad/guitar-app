@@ -53,8 +53,8 @@ Source of truth: `docs/SPEC.md`. This file turns spec Section 11 into tasks that
   - The C♭ and C♯ major scales.
   - An empty attempt history.
   - Clock tests across midnight for day grouping.
-- [~] **M1-8 Review + device check** (reviewer). Depends: M1-6, M1-7.
-  Status: code review done and fixes applied; awaiting user's on-device iPhone check.
+- [x] **M1-8 Review + device check** (reviewer). Depends: M1-6, M1-7.
+  Status: code review done and fixes applied; user confirmed M1 on device 2026-11-02 (after the tab-style horizontal fretboard change).
   Accept: the code follows the style rules (no regex, no unused exports, all music logic only in `src/music`). The user has checked all **iOS** items for M1-0 plus one full 10-minute timed session on the phone, including the screen staying awake.
 
 **Parallel groups (M1):** wave 0: M1-0 · wave 1: M1-1, M1-2, M1-3, M1-4 · wave 2: M1-5, M1-7 · wave 3: M1-6 · wave 4: M1-8
@@ -184,26 +184,21 @@ interface FretDrillProps { mode: FretMode; strings: number[]; spelling: Spelling
 ---
 
 ## Milestone 2: Theory drills (5.2) and Key Explorer
-- [ ] **M2-1 Keys and diatonic harmony** (theory-engine). Files: `src/music/keys.ts`, `src/music/chords.ts`, `src/music/progressions.ts`, plus tests. Depends: M1-1.
-  Accept: adds the following:
-  - `MAJOR_KEYS` (15, in circle-of-fifths order).
-  - `keySignature(root)`, returning `{ count, notes }` (positive count = sharps, negative = flats).
-  - `relativeMinor`.
-  - `Chord { root: Note; quality }` with qualities maj, min, dim, maj7, 7, m7, m7b5.
-  - `chordName`, `diatonicTriads`, `diatonicSevenths`, `romanNumeral(degree, quality)`.
-  - `chordsFromDegrees(key, degrees)`, `keysContaining(chord)`.
-  - `PROGRESSIONS` (I-V-vi-IV, I-vi-IV-V, ii-V-I, I-IV-iii-V, 12-bar blues, Canon).
-- [ ] **M2-2 Theory skills and targets** (data-layer). Files: `src/mastery/skills.ts`, `src/mastery/targets.ts`. Depends: M1-3.
-  Accept: adds these skill IDs: `int:up:{P5}`, `int:semis:{P5}`, `scale:major`, `keysig`, `diatonic:triads`, `diatonic:keys-of-chord`, `transpose:to-chords`, `transpose:to-numerals`, `fret:intnav:{M3}`, `fret:octave`. Targets are set for each.
-- [ ] **M2-3 Answer pads** (drills-ui). Files: `src/components/SpellPad.tsx` (letter buttons plus a ♭/♮/♯ toggle), `src/components/ChordPad.tsx`, `src/components/NumeralPad.tsx`. Depends: M1-4.
-- [ ] **M2-4 Theory drills** (drills-ui). Files: `src/drills/IntervalQuiz.tsx` (both directions), `ScaleSpell.tsx`, `KeySignature.tsx`, `DiatonicChords.tsx` (key → chords, chord → keys), `Transposer.tsx` (both directions). Depends: M2-1, M2-2, M2-3.
-  Accept: every question uses a random key or root, and grading compares spelled notes (letter + accidental), not pitch class.
-- [ ] **M2-5 Fretboard drills 5.1 items 5–6** (drills-ui). Files: `src/drills/IntervalNav.tsx`, `src/drills/OctaveFinder.tsx`. Depends: M2-1, M2-2.
-- [ ] **M2-6 Key Explorer and fretboard labels** (drills-ui). Files: `src/screens/KeyExplorer.tsx`, `Fretboard.tsx` (adds a label toggle: names, intervals, degrees). Depends: M2-1.
-  Accept: any key shows its notes, triads, sevenths, relative minor, and progressions as numerals and chord names. The fretboard highlights the scale.
-- [ ] **M2-7 Practice screen and timer** (drills-ui). Files: `Practice.tsx`, `SessionTimer.tsx`. Depends: M2-4.
-  Accept: theory drills are listed, and the timer gains a 5-minute mixed theory block.
-- [ ] **M2-8 Tests** (tester) and **M2-9 Review** (reviewer). Depends: all of M2.
+Status: built, reviewed, fixes applied. **iOS** layout checks (tallest drills: Transposer 12-bar, KeysOfChord, ScaleSpell; Key Explorer chord names and fretboard labels) pending the user.
+
+- [x] **M2-1 Keys and diatonic harmony** (theory-engine). Files: `src/music/keys.ts`, `src/music/chords.ts`, `src/music/progressions.ts`, plus tests.
+  Built: `MAJOR_KEYS` (15, circle-of-fifths order), `keySignature(root)` → `{ count, notes }`, `relativeMinor`, `notesEqual`, `Chord`/`ChordQuality` (maj, min, dim, maj7, 7, m7, m7b5), `chordName`, `chordSymbol`, `diatonicTriads`, `diatonicSevenths`, `romanNumeral`, `NUMERAL_DEGREES`, `keysContaining`, `numeralInKey`, `PROGRESSIONS` (I–V–vi–IV, I–vi–IV–V, I–IV–iii–V, ii–V–I, Canon, 12-bar blues), `progressionChords` and `progressionNumerals` (these replace the planned `chordsFromDegrees`).
+  Also added to `src/music`: `pitchAt` and `fretAbove` (absolute pitch, standard tuning), `readableSpelling`, `scaleOnFretboard`, `MAJOR_DEGREE_INTERVALS`, `CHROMATIC_PCS`, `enharmonicLabel`.
+- [x] **M2-2 Theory skills and targets** (data-layer). Files: `src/mastery/skills.ts`, `src/mastery/targets.ts`, `src/data/types.ts`.
+  Built: one skill per drill type: `int:up`, `int:semis`, `fret:intnav`, `fret:octave`, `scale:major`, `keysig`, `diatonic:triads`, `diatonic:keys-of-chord`, `transpose:to-chords`, `transpose:to-numerals`. Weakness on individual intervals and keys is handled by the item picker. Targets are set for each (key-signature 12 s for count plus naming the accidentals).
+- [x] **M2-3 Answer pads** (drills-ui). Files: `src/components/SpellPad.tsx` (♭/♮/♯ + letters), `ChordPad.tsx`, `NumeralPad.tsx`, `NumberPad.tsx`.
+- [x] **M2-4 Theory drills** (drills-ui). Files: `src/drills/IntervalUp.tsx`, `IntervalSemitones.tsx`, `ScaleSpell.tsx`, `KeySignature.tsx` (count, then the accidentals in order), `DiatonicChords.tsx` (name all 7 triads with neutral degree labels), `KeysOfChord.tsx`, `Transposer.tsx` (both directions), `theoryItems.ts`, `theoryDrillList.ts`, `StepCells.tsx`.
+  Accept: every question uses a random key or root; grading compares spelled notes (letter + accidental), never pitch class. Multi-part items log one attempt per item, with ms = total / parts.
+- [x] **M2-5 Fretboard drills 5.1 items 5–6** (drills-ui). Files: `src/drills/IntervalNav.tsx`, `OctaveFinder.tsx`, `navItems.ts`. Interval targets are the exact absolute pitch above the start note.
+- [x] **M2-6 Key Explorer** (drills-ui). Files: `src/screens/KeyExplorer.tsx`, `keyexplorer.css`, `src/music/fretmap.ts`. Any key shows its notes, signature, relative minor, triads, sevenths and progressions; the scale fretboard has a Names / Intervals / Degrees label toggle.
+- [x] **M2-7 Practice screen and timer** (drills-ui). Files: `Practice.tsx`, `SessionTimer.tsx`, `App.tsx`, `src/drills/TheoryMix.tsx`.
+  Built: Practice lists the Fretboard, Theory and Reference sections. The session is now 15:00: the 4 fretboard blocks plus a 5:00 Theory mix that switches to a different theory drill every 3 finished items.
+- [x] **M2-8 Tests** (tester) and **M2-9 Review** (reviewer). Review findings fixed.
 
 **Parallel groups (M2):** wave 1: M2-1, M2-2, M2-3 · wave 2: M2-4, M2-5, M2-6 · wave 3: M2-7, M2-8 · wave 4: M2-9
 

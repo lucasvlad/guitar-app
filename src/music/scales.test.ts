@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LETTERS, noteName, pitchClass, semitonesUp, type Letter, type Note } from './notes';
-import { CHROMATIC_PCS, MAJOR_STEPS, enharmonicLabel, majorScale, spellPitchClass } from './scales';
+import { CHROMATIC_PCS, MAJOR_STEPS, enharmonicLabel, majorScale, readableSpelling, spellPitchClass } from './scales';
 
 const n = (letter: Letter, accidental = 0): Note => ({ letter, accidental });
 const names = (notes: Note[]) => notes.map(noteName).join(' ');
@@ -100,5 +100,19 @@ describe('enharmonicLabel', () => {
     expect(enharmonicLabel(1, 'sharps')).toBe('C♯');
     expect(enharmonicLabel(1, 'flats')).toBe('D♭');
     expect(enharmonicLabel(8, 'flats')).toBe('A♭');
+  });
+});
+
+describe('readableSpelling', () => {
+  it('respells double accidentals', () => {
+    expect(readableSpelling({ letter: 'F', accidental: 2 })).toEqual({ letter: 'G', accidental: 0 });
+    expect(readableSpelling({ letter: 'B', accidental: -2 })).toEqual({ letter: 'A', accidental: 0 });
+    expect(readableSpelling({ letter: 'C', accidental: 2 })).toEqual({ letter: 'D', accidental: 0 });
+    expect(readableSpelling({ letter: 'E', accidental: -2 })).toEqual({ letter: 'D', accidental: 0 });
+  });
+  it('keeps single accidentals and naturals', () => {
+    expect(readableSpelling({ letter: 'E', accidental: 1 })).toEqual({ letter: 'E', accidental: 1 });
+    expect(readableSpelling({ letter: 'C', accidental: -1 })).toEqual({ letter: 'C', accidental: -1 });
+    expect(readableSpelling({ letter: 'A', accidental: 0 })).toEqual({ letter: 'A', accidental: 0 });
   });
 });

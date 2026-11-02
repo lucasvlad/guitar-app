@@ -49,3 +49,9 @@ export function enharmonicLabel(pc: PitchClass, pref: SpellingPref): string {
   if (pref === 'flats') return flat;
   return sharp + ' ' + flat;
 }
+
+// Respells double sharps/flats with the plain sharp or flat name (F♯♯ → G); single accidentals are kept.
+export function readableSpelling(n: Note): Note {
+  if (Math.abs(n.accidental) <= 1) return n;
+  return spellPitchClass(pitchClass(n), n.accidental > 0 ? 'sharps' : 'flats');
+}

@@ -1,6 +1,20 @@
 import type { SpellingPref } from '../music';
 
-export type DrillType = 'fret-all-strings' | 'fret-note-on-string' | 'fret-neighborhood' | 'fret-reverse';
+export type DrillType =
+  | 'fret-all-strings'
+  | 'fret-note-on-string'
+  | 'fret-neighborhood'
+  | 'fret-reverse'
+  | 'interval-up'
+  | 'interval-semitones'
+  | 'scale-spell'
+  | 'key-signature'
+  | 'diatonic-chords'
+  | 'keys-of-chord'
+  | 'transpose-to-chords'
+  | 'transpose-to-numerals'
+  | 'interval-nav'
+  | 'octave-finder';
 
 export type FretMode = 'natural' | 'chromatic';
 

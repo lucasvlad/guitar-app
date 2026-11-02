@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ComponentType } from 'react'
 import { DRILLS } from '../drills/drillList'
+import { TheoryMix } from '../drills/TheoryMix'
 import { useWakeLock } from './useWakeLock'
 import type { FretDrillProps } from '../drills/useDrillRun'
 
@@ -8,12 +9,20 @@ interface SessionTimerProps extends Pick<FretDrillProps, 'mode' | 'strings' | 's
 }
 
 const MIN = 60 * 1000
-// Fixed M1 sequence, indexes into DRILLS: Note on string, Reverse, Neighborhood, All strings.
-const BLOCKS = [
-  { drill: DRILLS[0]!, ms: 3 * MIN },
-  { drill: DRILLS[1]!, ms: 3 * MIN },
-  { drill: DRILLS[2]!, ms: 2 * MIN },
-  { drill: DRILLS[3]!, ms: 2 * MIN },
+
+interface Block {
+  title: string
+  Component: ComponentType<FretDrillProps>
+  ms: number
+}
+
+// Fixed sequence (15:00): Note on string, Reverse, Neighborhood, All strings (DRILLS 0-3), then Theory mix.
+const BLOCKS: Block[] = [
+  { ...DRILLS[0]!, ms: 3 * MIN },
+  { ...DRILLS[1]!, ms: 3 * MIN },
+  { ...DRILLS[2]!, ms: 2 * MIN },
+  { ...DRILLS[3]!, ms: 2 * MIN },
+  { title: 'Theory mix', Component: TheoryMix, ms: 5 * MIN },
 ]
 
 interface Tally {
@@ -96,8 +105,8 @@ export function SessionTimer({ mode, strings, spelling, onExit }: SessionTimerPr
           {BLOCKS.map((b, i) => {
             const t = tallies[i]!
             return (
-              <div key={b.drill.id} className="summary-row">
-                <span>{b.drill.title}</span>
+              <div key={b.title} className="summary-row">
+                <span>{b.title}</span>
                 <span>
                   {t.total} tries{t.total > 0 ? ' · ' + Math.round((100 * t.correct) / t.total) + '%' : ''}
                 </span>
@@ -110,15 +119,15 @@ export function SessionTimer({ mode, strings, spelling, onExit }: SessionTimerPr
     )
   }
 
-  const { drill } = BLOCKS[block]!
-  const Drill = drill.Component
+  const current = BLOCKS[block]!
+  const Drill = current.Component
 
   return (
     <div className="session">
       <div className={'session-bar' + (paused ? ' session-paused' : '')}>
         <div className="session-info">
           <span className="session-time">{formatTime(left)}</span>
-          <span className="session-title">{paused ? 'Paused' : block + 1 + '/' + BLOCKS.length + ' ' + drill.title}</span>
+          <span className="session-title">{paused ? 'Paused' : block + 1 + '/' + BLOCKS.length + ' ' + current.title}</span>
         </div>
         <button type="button" className="topbar-btn" onClick={togglePause}>{paused ? 'Resume' : 'Pause'}</button>
         <button type="button" className="topbar-btn" onClick={skip}>Skip</button>

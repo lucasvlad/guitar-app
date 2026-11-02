@@ -8,18 +8,18 @@ A local-first progressive web app that teaches the guitar fretboard and music th
 
 ## Status
 
-Milestone 1 of 7 is built. It includes:
+Milestones 1 and 2 of 7 are built. They include:
 
 - Project setup, PWA manifest and service worker, and CI/CD to GitHub Pages
-- A music theory core: notes, enharmonic spelling, intervals, major scales and fretboard mapping
-- Four fretboard drills, with natural or chromatic note sets and a string subset option (the All strings drill always uses all six)
+- A music theory core: notes, enharmonic spelling, intervals, major scales, keys and key signatures, diatonic triads and sevenths, Roman numerals, progressions and fretboard mapping
+- Six fretboard drills, with natural or chromatic note sets and a string subset option
+- Eight theory drills, plus a Key Explorer reference screen
 - Mastery tracking, Leitner spaced repetition and an adaptive item picker
 - Local storage in IndexedDB
-- A 10-minute timed session
+- A 15-minute timed session
 
 Roadmap:
 
-2. Theory drills (intervals, scale spelling, keys, diatonic chords, transposer) and a Key Explorer
 3. Adaptive planner (weekly schedule, session generator, spaced review), Home screen, `.ics` calendar reminders
 4. Backing-track generator, improvisation constraints, ear training
 5. Song Lab: analyse real songs' keys and progressions
@@ -28,14 +28,24 @@ Roadmap:
 
 ## Features (current)
 
-- **Four fretboard drills**
+- **Six fretboard drills** on a tab-style fretboard (high e on top, nut on the left)
   - *Note on string*: find a given note on a given string.
   - *Reverse*: a fret is highlighted and you name the note.
   - *Neighborhood*: find every location of a note within five frets of an anchor.
   - *All strings*: find a note on all six strings.
+  - *Interval navigation*: from a highlighted note, find a 3rd, 4th, 5th or octave above on another string. The target must be the exact pitch above, not just a note with the same name.
+  - *Octave finder*: find the same note one or two strings away.
+- **Eight theory drills** (no instrument needed). Every question uses a random key, and answers are graded on the spelled note (letter plus accidental), not just the pitch.
+  - *Intervals*: the note an interval above a given note, and the semitone count of an interval.
+  - *Scale spelling*: spell any major scale in order.
+  - *Key signatures*: how many sharps or flats a key has, then which ones, in order.
+  - *Diatonic chords*: name all seven triads of a key.
+  - *Keys of a chord*: pick every major key that contains a given chord.
+  - *Transposer*: Roman numerals to chord names in a random key, and back.
+- **Key Explorer:** any key's notes, signature, relative minor, triads, seventh chords and common progressions, with a scale fretboard you can label by note name, interval or degree.
 - **Adaptive item selection:** each next question is a weighted draw that favours notes you have recently missed or answered slowly, and the same item never comes up twice in a row.
 - **Mastery tracking and spaced repetition:** every attempt is recorded. Skills move through Leitner boxes with review intervals of 1, 3, 7, 14 and 30 days. A skill counts as mastered when, across your last 3 practice days, accuracy is at least 90% and your median answer time is within its speed target.
-- **10-minute timed session:** a fixed sequence of the four drills with Pause, Skip and a per-block tally. The timer runs on wall-clock time, and a wake lock keeps the screen on.
+- **15-minute timed session:** four fretboard blocks, then a 5-minute theory mix that switches to a different theory drill every three questions. It has Pause, Skip and a per-block tally, and pauses itself when the app goes to the background. The timer runs on wall-clock time, and a wake lock keeps the screen on.
 - **Offline support:** the service worker precaches the whole build, so the installed app works in airplane mode.
 - **Data stays on the device:** everything is stored in IndexedDB. There are no accounts, no server and no tracking.
 
@@ -43,10 +53,10 @@ Roadmap:
 
 - **React 19 + TypeScript (strict) + Vite** with `vite-plugin-pwa`. A Workbox-generated service worker precaches the build and updates itself automatically.
 - **IndexedDB via `idb`**, isolated in `src/data/`, the only module that touches storage. It has versioned stores for attempts, skills and settings, and asks for persistent storage.
-- **A pure-function music theory engine** (`src/music/`) with no React, no I/O and no hidden randomness. Spelling is enharmonically correct: every major scale uses each letter name exactly once, so F♯ major contains E♯ (not F) and C♭ major contains F♭. Tests cover all 15 major keys, every open string at frets 0–12, and transposition by every interval.
+- **A pure-function music theory engine** (`src/music/`) with no React, no I/O and no hidden randomness. Spelling is enharmonically correct: every major scale uses each letter name exactly once, so F♯ major contains E♯ (not F) and C♭ major contains F♭. Tests cover all 15 major keys and their signatures, diatonic chords and progressions, every open string at frets 0–12, and transposition by every interval.
 - **A pure mastery and spaced-repetition module** (`src/mastery/`). You can pass in your own random source, so the tests check the weighted picker's statistics over 10,000 seeded draws.
 - **Integration tests** for the drills and components, using Testing Library on jsdom with `fake-indexeddb` standing in for the real database.
-- **117 tests across 15 files**, all run by `npx vitest run` in about 1.3 seconds.
+- **247 tests across 26 files**, all run by `npx vitest run` in about 1.3 seconds.
 - **CI/CD:** every push to `main` runs typecheck, tests and build in GitHub Actions, then deploys to GitHub Pages.
 - **Code style constraints:** the codebase contains no regular expressions; all strings are parsed with plain code. Abstractions are kept minimal, files are small, and each milestone builds only what it needs. All music logic lives in `src/music`, and the UI never computes notes or intervals itself.
 - No router or UI library: screens switch via React state, and styling is plain CSS with mobile-first tap targets of 48px or more.
@@ -54,7 +64,7 @@ Roadmap:
 ## Project structure
 
 ```
-src/music/       Pure music theory: notes, spelling, intervals, scales, fretboard (unit tested)
+src/music/       Pure music theory: notes, spelling, intervals, scales, keys, chords, progressions, fretboard (unit tested)
 src/mastery/     Pure mastery scoring, Leitner scheduling, weighted item picker, skill targets
 src/data/        Data model types and IndexedDB access (idb)
 src/drills/      One component per fretboard drill, plus the shared drill-run hook and options

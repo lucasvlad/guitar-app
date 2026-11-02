@@ -40,3 +40,7 @@ export function noteName(n: Note): string {
   const symbol = n.accidental > 0 ? '♯' : '♭';
   return n.letter + symbol.repeat(Math.abs(n.accidental));
 }
+
+export function notesEqual(a: Note, b: Note): boolean {
+  return a.letter === b.letter && a.accidental === b.accidental;
+}

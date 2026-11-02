@@ -77,3 +77,118 @@
   border-color: var(--accent, #f2a33a);
   background: #3a2c17;
 }
+
+/* Theory drills (5.2): question text, sequences, key grids, progressions. */
+.drill-q {
+  font-size: 1.15rem;
+  color: #aaa;
+}
+
+.drill-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.drill-seq {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.drill-cell {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #1e1e1e;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.drill-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.drill-grid-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.drill-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1.1;
+}
+
+.drill-key-num {
+  font-size: 0.8rem;
+}
+
+.pad-btn.drill-key-right:disabled {
+  opacity: 1;
+  background: #1d4d2c;
+  border-color: #3ecf6a;
+  color: #f2f2f2;
+}
+
+.pad-btn.drill-key-wrong:disabled {
+  opacity: 1;
+  background: #5a1f1f;
+  border-color: #ef4b4b;
+  color: #f2f2f2;
+}
+
+.drill-submit {
+  min-height: 56px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent, #f2a33a);
+  color: #121212;
+  font-size: 1.25rem;
+  font-weight: 700;
+  touch-action: manipulation;
+}
+
+.drill-submit:disabled {
+  opacity: 0.5;
+}
+
+.drill-prog {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.drill-step {
+  padding: 4px 2px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #1e1e1e;
+  text-align: center;
+  font-weight: 700;
+}
+
+.drill-step.drill-cur {
+  border-color: var(--accent, #f2a33a);
+}
+
+.drill-step-given {
+  font-size: 1.1rem;
+  color: #f2f2f2;
+}
+
+.drill-step-ans {
+  font-size: 1.1rem;
+}
+
+/* Theory mix: names the current theory drill. */
+.mix-label {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #aaa;
+}

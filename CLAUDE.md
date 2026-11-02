@@ -109,3 +109,8 @@ For each milestone:
 - 2026-11-01: Leitner promotion only when a skill is due (prevents double promotion within a session); failures always reset to box 0.
 - 2026-11-01: Fretboard is horizontal like tab (string 1/high e on top, nut left, frets 0–12 left→right), per user feedback. Supersedes the vertical decision; stringIndex 0 = string 1 (high E) is unchanged.
 - 2026-11-01: The session timer auto-pauses when the page is hidden; the user resumes manually. Restoring a session after the app is killed is deferred to M3-5.
+- 2026-11-02: One skill per drill type (e.g. `int:up`, `fret:intnav`); weakness on individual items (intervals, keys) is handled by the weighted picker.
+- 2026-11-02: Multi-part items (scale spelling, diatonic 7 chords, transposer progressions, key signature count + notes) log ONE attempt per item, with ms = total / parts.
+- 2026-11-02: The Diatonic chords drill names all 7 triads of a key, with neutral degree labels (1–7) so the numeral doesn't give away the quality.
+- 2026-11-02: Interval navigation targets are the exact absolute pitch above the start note (`pitchAt` / `fretAbove`), not just the same note name.
+- 2026-11-02: IntervalUp skips answers that need double accidentals, because the pads only have ♭ ♮ ♯.
