@@ -15,48 +15,49 @@ Source of truth: `docs/SPEC.md`. This file turns spec Section 11 into tasks that
 
 ## Milestone 1: Setup, theory core, fretboard drills, mastery, storage, timer
 
-- [~] **M1-0 Project setup + hosting** (owner: orchestrator). Files: `package.json`, `vite.config.ts`, `tsconfig*.json`, `index.html`, `public/` (icons, manifest assets), `.github/workflows/deploy.yml`, `src/main.tsx`, `src/App.tsx` (empty shell), `src/index.css`. Depends: none.
-  Status: Local scaffold done (commit 01c7f7a, `npm run check` passes, deploy workflow written). Remote repo + Pages publish awaiting user approval. The `BASE_PATH` env var overrides the Vite base (default `/guitar-app/`).
+- [x] **M1-0 Project setup + hosting** (owner: orchestrator). Files: `package.json`, `vite.config.ts`, `tsconfig*.json`, `index.html`, `public/` (icons, manifest assets), `.github/workflows/deploy.yml`, `src/main.tsx`, `src/App.tsx` (empty shell), `src/index.css`. Depends: none.
+  Status: Live at https://lucasvlad.github.io/guitar-app/ (public repo github.com/lucasvlad/guitar-app, approved by user 2026-11-01). The `BASE_PATH` env var overrides the Vite base (default `/guitar-app/`).
   Accept: `npm run dev`, `npm test` (Vitest) and `npm run build` all pass. A push to main deploys to GitHub Pages; the Vite `base` setting matches the repo path. vite-plugin-pwa produces a manifest (standalone display, icons, apple-touch-icon) and a service worker that precaches the build. **iOS:** Add to Home Screen works, and the app launches offline in airplane mode.
-- [ ] **M1-1 Music core** (theory-engine). Files: `src/music/notes.ts`, `src/music/intervals.ts`, `src/music/scales.ts`, `src/music/fretboard.ts`, `src/music/index.ts`, plus a `*.test.ts` next to each. Depends: M1-0 (only to run Vitest).
+- [x] **M1-1 Music core** (theory-engine). Files: `src/music/notes.ts`, `src/music/intervals.ts`, `src/music/scales.ts`, `src/music/fretboard.ts`, `src/music/index.ts`, plus a `*.test.ts` next to each. Depends: M1-0 (only to run Vitest).
   Accept: implements the contract below exactly. Tests cover these cases:
   - `noteAt` for every open string and frets 0–12.
   - `majorScale` for all 15 key roots, with each letter used exactly once (F♯ major contains E♯; C♭ major contains F♭).
   - `transpose` for every interval from C, F♯ and B♭.
   - `spellPitchClass` under each preference, with and without a key.
-- [ ] **M1-2 Data layer** (data-layer). Files: `src/data/types.ts`, `src/data/db.ts`, `src/data/db.test.ts` (uses the `fake-indexeddb` dev dependency). Depends: M1-0.
+- [x] **M1-2 Data layer** (data-layer). Files: `src/data/types.ts`, `src/data/db.ts`, `src/data/db.test.ts` (uses the `fake-indexeddb` dev dependency). Depends: M1-0.
   Accept: implements the contract. Database `guitar-app`, version 1, with these stores:
   - `attempts`: autoIncrement, with indexes `skillId` and `ts`.
   - `skills`: keyPath `id`.
   - `settings`: a single key, `"settings"`.
 
   `getSettings` returns defaults when nothing is stored. The first open calls `navigator.storage.persist()`, and a failure there is ignored.
-- [ ] **M1-3 Mastery + Leitner + picker** (data-layer). Files: `src/mastery/mastery.ts`, `src/mastery/leitner.ts`, `src/mastery/picker.ts`, `src/mastery/skills.ts`, `src/mastery/targets.ts`, plus tests. Depends: none (imports types only from the contract).
+- [x] **M1-3 Mastery + Leitner + picker** (data-layer). Files: `src/mastery/mastery.ts`, `src/mastery/leitner.ts`, `src/mastery/picker.ts`, `src/mastery/skills.ts`, `src/mastery/targets.ts`, plus tests. Depends: none (imports types only from the contract).
   Accept: pure functions with no idb or DOM access, and the random source can be injected. Tests cover these cases:
   - Leitner promotes and resets correctly.
   - The mastery gate checks the last 3 distinct days.
   - A weak item is picked at least 2× as often as a strong one over 10k draws with a seeded random source.
   - The picker never returns `lastKey` when there are 2 or more items.
-- [ ] **M1-4 Fretboard + NotePad components** (drills-ui). Files: `src/components/Fretboard.tsx`, `src/components/NotePad.tsx`, `src/components/components.css`. Depends: M1-0; builds against the M1-1 contract.
+- [x] **M1-4 Fretboard + NotePad components** (drills-ui). Files: `src/components/Fretboard.tsx`, `src/components/NotePad.tsx`, `src/components/components.css`. Depends: M1-0; builds against the M1-1 contract.
   Accept:
   - The fretboard is vertical: nut at the top, string 6 on the left, frets 0–12, with markers at frets 3, 5, 7, 9 and 12.
   - It renders highlights, dims strings outside the subset, and calls `onTap`.
   - NotePad shows 7 letter buttons in natural mode and 12 in chromatic mode. In `auto` mode each label shows both names (e.g. "C♯ D♭").
   - Tap targets are at least 48px.
-- [ ] **M1-5 Fretboard drills 5.1 items 1–4 and 7** (drills-ui). Files: `src/drills/useDrillRun.ts`, `src/drills/FindAllStrings.tsx`, `src/drills/NoteOnString.tsx`, `src/drills/Neighborhood.tsx`, `src/drills/ReverseNote.tsx`, `src/drills/DrillOptions.tsx`, `src/drills/drills.css`. Depends: M1-1, M1-2, M1-3, M1-4.
+- [x] **M1-5 Fretboard drills 5.1 items 1–4 and 7** (drills-ui). Files: `src/drills/useDrillRun.ts`, `src/drills/FindAllStrings.tsx`, `src/drills/NoteOnString.tsx`, `src/drills/Neighborhood.tsx`, `src/drills/ReverseNote.tsx`, `src/drills/DrillOptions.tsx`, `src/drills/drills.css`. Depends: M1-1, M1-2, M1-3, M1-4.
   Accept: the drill contract below is met. Attempts appear in IndexedDB with the correct skill IDs and item keys. Natural/chromatic mode and the string subset change which items are drawn. Skills are updated when a run ends.
-- [ ] **M1-6 Practice screen, session timer, mini Settings, navigation** (drills-ui). Files: `src/screens/Practice.tsx`, `src/screens/SessionTimer.tsx`, `src/screens/Settings.tsx`, `src/App.tsx` (screen state). Depends: M1-5.
+- [x] **M1-6 Practice screen, session timer, mini Settings, navigation** (drills-ui). Files: `src/screens/Practice.tsx`, `src/screens/SessionTimer.tsx`, `src/screens/Settings.tsx`, `src/App.tsx` (screen state). Depends: M1-5.
   Accept: the timer contract below is met. Settings saves the spelling preference, and the drill options persist. Navigation uses a `screen` state value in `App` (no router).
-- [ ] **M1-7 Test pass** (tester). Files: `src/**/*.test.ts` gaps only. Depends: M1-1, M1-2, M1-3 (can start in wave 2 against the contract).
+- [x] **M1-7 Test pass** (tester). Files: `src/**/*.test.ts` gaps only. Depends: M1-1, M1-2, M1-3 (can start in wave 2 against the contract).
   Accept: all tests are green. Edge cases added:
   - Fret 12 equals the open string.
   - The C♭ and C♯ major scales.
   - An empty attempt history.
   - Clock tests across midnight for day grouping.
-- [ ] **M1-8 Review + device check** (reviewer). Depends: M1-6, M1-7.
+- [~] **M1-8 Review + device check** (reviewer). Depends: M1-6, M1-7.
+  Status: code review done and fixes applied; awaiting user's on-device iPhone check.
   Accept: the code follows the style rules (no regex, no unused exports, all music logic only in `src/music`). The user has checked all **iOS** items for M1-0 plus one full 10-minute timed session on the phone, including the screen staying awake.
 
-**Parallel groups (M1):** wave 0: M1-0 (in progress) · wave 1: M1-1, M1-2, M1-3, M1-4 · wave 2: M1-5, M1-7 · wave 3: M1-6 · wave 4: M1-8
+**Parallel groups (M1):** wave 0: M1-0 · wave 1: M1-1, M1-2, M1-3, M1-4 · wave 2: M1-5, M1-7 · wave 3: M1-6 · wave 4: M1-8
 
 ### M1 interface contract
 
@@ -90,6 +91,8 @@ export function transpose(n: Note, interval: IntervalName): Note; // moves lette
 
 export const MAJOR_STEPS: number[];              // [2,2,1,2,2,2,1]
 export function majorScale(root: Note): Note[];  // 7 notes, one per letter, starting on root
+export const CHROMATIC_PCS: PitchClass[];        // [0..11]
+export function enharmonicLabel(pc: PitchClass, pref: SpellingPref): string; // auto: "C♯ D♭"; sharps/flats: single name
 ```
 In strings 1–6, string number = `stringIndex + 1`. M2 adds to this module (see M2-1); do not add M2 functions in M1.
 
@@ -122,8 +125,10 @@ export function masteryScore(attempts: Attempt[], targetMs: number, now: number)
 //   recency = max(0.5, 1 - daysSinceLast/60); score = (0.7*acc + 0.3*speed) * recency
 export function isMastered(attempts: Attempt[], targetMs: number): boolean; // gate, see below
 export function applyRun(skill: Skill, runAttempts: Attempt[], allAttempts: Attempt[], targetMs: number, now: number): Skill;
-//   mastery = masteryScore(allAttempts...), lastReviewed = now, Leitner with correct = (run accuracy >= 0.9)
-export function pickWeighted<T extends { key: string }>(items: T[], attempts: Attempt[], targetMs: number, lastKey?: string, rand?: () => number): T;
+//   mastery = masteryScore(allAttempts...), lastReviewed = now. Pass = run accuracy >= 0.9.
+//   Pass promotes only when due (nextDue null or now >= nextDue), else box/nextDue unchanged (no double promotion within a session).
+//   Fail always resets to box 0, due now + 1 day.
+export function pickWeighted<T extends { key: string }>(items: T[], attempts: Attempt[], targetMs: number, lastKey: string | undefined, rand: () => number): T; // rand required
 //   per item (attempts whose prompt === key, last 5): unseen weight 3; else 1 + 4*(1-acc) + min(2, max(0, median/targetMs - 1) * 2)
 export const TARGET_MS: Record<DrillType, number>;
 export function fretSkillId(mode: FretMode, scope: string): string; // scope 's1'..'s6' | 'allstrings' | 'neighborhood'
@@ -148,7 +153,8 @@ The spec's later speed tiers (under 1 s, then metronome pace) arrive with the M3
 
 **Drill component contract (drills-ui):**
 ```ts
-interface FretDrillProps { mode: FretMode; strings: number[]; spelling: SpellingPref; paused?: boolean; onExit?: () => void }
+interface FretDrillProps { mode: FretMode; strings: number[]; spelling: SpellingPref; paused?: boolean; onAnswer?: (correct: boolean) => void }
+// Screens own the Done bar; drills have no onExit.
 ```
 - **Loop:**
   1. Build the candidate list from mode and strings. Natural mode keeps only natural pitch classes; drill 4 keeps only positions whose pitch class is natural.
@@ -158,7 +164,7 @@ interface FretDrillProps { mode: FretMode; strings: number[]; spelling: Spelling
   5. `logAttempt` saves the attempt.
   6. Feedback shows for about 700 ms (the answer on the fretboard, green or red), then the next prompt appears.
 - **Drills 1–3 ("play it", self-graded):**
-  - Drill 1: the note name, to be found on every selected string.
+  - Drill 1: the note name, to be found on all six strings (ignores the string subset).
   - Drill 2: the note name plus a string number.
   - Drill 3: the note name plus an anchor fret marker; the window is anchor ±5, clamped to 0–12.
 
@@ -319,3 +325,5 @@ interface FretDrillProps { mode: FretMode; strings: number[]; spelling: Spelling
 13. **Packages:** `fake-indexeddb` is a dev dependency for data tests. No Tone.js; plain Web Audio only.
 14. **.ics download:** if downloading from the standalone PWA fails on iOS, the fallback is a link that opens the file in Safari.
 15. `noUncheckedIndexedAccess` is enabled in tsconfig (stricter indexing).
+16. All strings drill (5.1 item 1) always uses all six strings; the string-subset option applies to the other drills.
+17. Leitner promotion only when due; failures always reset to box 0.

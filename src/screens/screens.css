@@ -1,0 +1,185 @@
+/* App screens: Practice, SessionTimer, Settings, and the drill top bar. */
+.screen {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.start-sub {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.screen > .start {
+  max-width: none;
+  min-height: 112px;
+  font-size: 2rem;
+}
+
+.section-label {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.drill-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.list-btn {
+  min-height: 64px;
+  border: none;
+  border-radius: 12px;
+  background: #2a2a2a;
+  color: #f2f2f2;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.list-btn:active {
+  background: #3a3a3a;
+}
+
+.link-btn {
+  align-self: center;
+  min-height: 56px;
+  padding: 0 24px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1.1rem;
+  text-decoration: underline;
+}
+
+.info {
+  margin: 0;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+/* Slim top bar for single drills and Settings. */
+.topbar {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.topbar-btn {
+  min-height: 48px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 12px;
+  background: #2a2a2a;
+  color: #f2f2f2;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.topbar-btn:active {
+  background: #3a3a3a;
+}
+
+/* Session timer: sticky bar stays visible above the drill. */
+.session {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-bar {
+  position: sticky;
+  top: env(safe-area-inset-top);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  background: var(--bg);
+}
+
+.session-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.session-time {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.session-paused .session-time,
+.session-paused .session-title {
+  color: var(--accent);
+}
+
+.session-body {
+  position: relative;
+}
+
+.paused-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(18, 18, 18, 0.9);
+}
+
+.paused-label {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #1e1e1e;
+  font-size: 1.1rem;
+}

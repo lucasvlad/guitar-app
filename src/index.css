@@ -16,19 +16,21 @@
 html,
 body {
   margin: 0;
-  overflow-x: hidden;
   background: var(--bg);
+}
+
+/* clip (not hidden) so position: sticky still works. */
+body {
+  overflow-x: clip;
 }
 
 .app {
   min-height: 100dvh;
-  padding: calc(env(safe-area-inset-top) + 24px) calc(env(safe-area-inset-right) + 16px)
-    calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 16px);
+  padding: calc(env(safe-area-inset-top) + 8px) calc(env(safe-area-inset-right) + 16px)
+    calc(env(safe-area-inset-bottom) + 8px) calc(env(safe-area-inset-left) + 16px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
+  gap: 8px;
 }
 
 h1 {
@@ -43,6 +45,9 @@ button {
   font: inherit;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .start {

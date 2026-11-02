@@ -1,0 +1,177 @@
+/* Fretboard: vertical, nut at top, string 6 on the left. */
+.fretboard {
+  display: grid;
+  grid-template-columns: 24px repeat(6, 1fr);
+  grid-template-rows: repeat(13, var(--fret-row, 42px));
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.fb-fretnum {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.fb-anchor {
+  grid-column: 1 / -1;
+  background: rgba(242, 163, 58, 0.18);
+  border-radius: 6px;
+}
+
+.fb-marker {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.fb-marker-double {
+  justify-content: space-evenly;
+}
+
+.fb-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3a3a3a;
+}
+
+.fb-cell {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-bottom: 2px solid #777;
+  background: transparent;
+  color: inherit;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fb-cell.fb-open {
+  border-bottom: 6px solid #ddd; /* the nut */
+}
+
+/* The string line. */
+.fb-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 1px);
+  width: 2px;
+  background: #bbb;
+}
+
+.fb-cell.fb-dim::before {
+  opacity: 0.2;
+}
+
+.fb-hl {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #121212;
+}
+
+.fb-prompt {
+  background: var(--accent, #f2a33a);
+}
+
+.fb-correct {
+  background: #3ecf6a;
+}
+
+.fb-wrong {
+  background: #ef4b4b;
+}
+
+/* NotePad: answer buttons. */
+.notepad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.notepad-btn {
+  min-height: 56px;
+  min-width: 0;
+  padding: 0 4px;
+  border: none;
+  border-radius: 12px;
+  background: #2a2a2a;
+  color: #f2f2f2;
+  font-size: 1.25rem;
+  font-weight: 600;
+  touch-action: manipulation;
+}
+
+.notepad-chromatic .notepad-btn {
+  font-size: 1rem;
+}
+
+.notepad-btn:active {
+  background: #3a3a3a;
+}
+
+.notepad-btn:disabled {
+  opacity: 0.5;
+}
+
+/* GradeButtons: Got it / Missed. */
+.grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.grade-btn {
+  min-height: 72px;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #121212;
+  touch-action: manipulation;
+}
+
+.grade-got {
+  background: #3ecf6a;
+}
+
+.grade-missed {
+  background: #ef4b4b;
+}
+
+.grade-btn:active {
+  opacity: 0.8;
+}
+
+.grade-btn:disabled {
+  opacity: 0.4;
+}
