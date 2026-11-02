@@ -1,0 +1,62 @@
+:root {
+  color-scheme: dark;
+  --bg: #121212;
+  --text: #f2f2f2;
+  --accent: #f2a33a;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg);
+}
+
+.app {
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 24px) calc(env(safe-area-inset-right) + 16px)
+    calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+button {
+  min-height: 48px;
+  min-width: 48px;
+  font: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.start {
+  width: 100%;
+  max-width: 360px;
+  min-height: 72px;
+  border: none;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #121212;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.start:active {
+  opacity: 0.8;
+}
